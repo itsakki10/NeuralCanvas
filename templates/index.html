@@ -1,0 +1,1565 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+NeuralCanvas | AI Style Transfer
+</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root{
+    --bg:#f6f5ef;
+    --card:#fffdf8;
+    --green:#356f43;
+    --green-light:#6fa477;
+    --text:#1f2937;
+    --muted:#6b7280;
+    --border:#ebe7dc;
+    --shadow:0 15px 50px rgba(0,0,0,.08);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+html{
+
+scroll-behavior:smooth;
+
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+/* soft background blobs */
+
+body::before{
+content:'';
+position:fixed;
+width:500px;
+height:500px;
+top:-150px;
+right:-150px;
+background:radial-gradient(#cfe7cf,transparent 70%);
+filter:blur(60px);
+z-index:-1;
+opacity:.8;
+}
+
+body::after{
+content:'';
+position:fixed;
+width:500px;
+height:500px;
+bottom:-150px;
+left:-150px;
+background:radial-gradient(#dcefd7,transparent 70%);
+filter:blur(70px);
+z-index:-1;
+opacity:.8;
+}
+
+
+/* navbar */
+
+.navbar{
+background:rgba(255,253,248,.7);
+backdrop-filter:blur(16px);
+border-bottom:1px solid rgba(0,0,0,.05);
+padding:16px 0;
+}
+
+.navbar-brand{
+font-family:'Playfair Display',serif;
+font-size:2rem;
+font-weight:700;
+color:var(--green)!important;
+}
+
+.nav-link{
+color:var(--text)!important;
+font-weight:500;
+margin-left:20px;
+transition:.3s;
+}
+
+.nav-link:hover{
+color:var(--green)!important;
+}
+
+.navbar-toggler{
+
+border:none;
+
+box-shadow:none!important;
+
+}
+
+.navbar-toggler-icon{
+
+filter:invert(.3);
+
+}
+
+/* hero */
+
+.header-section{
+padding-top:140px;
+padding-bottom:70px;
+}
+
+.header-section h1{
+font-family:'Playfair Display',serif;
+font-size:clamp(3rem,7vw,6rem);
+line-height:1;
+font-weight:700;
+letter-spacing:-2px;
+max-width:700px;
+margin:auto;
+}
+
+.header-section .lead{
+font-size:1.15rem;
+color:var(--muted);
+max-width:650px;
+margin:30px auto;
+line-height:1.8;
+}
+
+
+/* buttons */
+
+.btn-primary{
+
+background:var(--green);
+border:none;
+padding:16px 42px;
+border-radius:999px;
+font-weight:600;
+font-size:1rem;
+
+box-shadow:
+0 10px 30px rgba(53,111,67,.25);
+
+transition:.35s;
+}
+
+.btn-primary:hover{
+
+transform:translateY(-3px);
+
+background:#2c5b38;
+}
+
+
+/* cards */
+
+.card{
+
+background:var(--card);
+
+border:none;
+
+border-radius:35px;
+
+padding:25px;
+
+box-shadow:var(--shadow);
+
+transition:.35s;
+}
+
+.card:hover{
+
+transform:translateY(-6px);
+}
+
+
+/* upload preview */
+
+.preview-image{
+
+height:280px;
+
+border-radius:25px;
+
+background:#f5f5f2;
+
+border:2px dashed #d7d7d7;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+overflow:hidden;
+
+color:var(--muted);
+}
+
+.preview-image img{
+
+width:100%;
+height:100%;
+
+object-fit:cover;
+}
+
+
+/* upload labels */
+
+.card-header{
+
+background:transparent;
+
+border:none;
+
+font-weight:600;
+
+font-size:1rem;
+
+letter-spacing:.5px;
+
+text-align:center;
+
+color:var(--green);
+
+margin-bottom:10px;
+}
+
+
+/* form fields */
+
+.form-control{
+
+background:#faf9f5;
+
+border:1px solid var(--border);
+
+padding:14px;
+
+border-radius:15px;
+}
+
+.form-control:focus{
+
+box-shadow:none;
+
+border-color:var(--green-light);
+}
+
+
+/* slider */
+
+.range-wrap{
+
+margin-top:40px;
+}
+
+#alphaRange{
+
+height:10px;
+
+background:#dde6db;
+
+border-radius:999px;
+}
+
+#alphaRange::-webkit-slider-thumb{
+
+appearance:none;
+
+width:22px;
+
+height:22px;
+
+background:var(--green);
+
+border-radius:50%;
+}
+
+
+/* result */
+
+#resultSection .card{
+
+background:white;
+}
+
+
+/* faq */
+
+.accordion-item{
+
+background:white;
+
+border:none;
+
+border-radius:20px!important;
+
+margin-bottom:15px;
+
+overflow:hidden;
+
+box-shadow:0 8px 20px rgba(0,0,0,.04);
+}
+
+.accordion-button{
+
+background:white;
+
+font-weight:600;
+}
+
+.accordion-button:not(.collapsed){
+
+background:#edf5ee;
+
+color:var(--green);
+
+box-shadow:none;
+}
+
+
+/* footer */
+
+.footer-section{
+margin-top:100px;
+padding:70px 0;
+background:#f0eee6;
+}
+
+
+.floating-blob{
+
+position:fixed;
+width:350px;
+height:350px;
+border-radius:50%;
+filter:blur(90px);
+z-index:-1;
+opacity:.4;
+transition:transform .7s ease;
+
+}
+
+.floating-blob:nth-child(1){
+
+top:-100px;
+left:-100px;
+
+background:#d8ecd6;
+}
+
+.floating-blob:nth-child(2){
+
+bottom:-120px;
+right:-100px;
+
+background:#cbe4c6;
+}
+
+.floating-blob:nth-child(3){
+
+top:40%;
+left:45%;
+
+background:#e9f4df;
+}
+
+.soft-loader{
+
+width:65px;
+height:65px;
+
+margin:auto;
+
+border:5px solid #d8e6d8;
+
+border-top:5px solid #356f43;
+
+border-radius:50%;
+
+animation:spin 1s linear infinite;
+}
+
+.loader-overlay{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:rgba(246,245,239,.92);
+
+backdrop-filter:blur(10px);
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+z-index:9999;
+
+opacity:0;
+
+visibility:hidden;
+
+transition:.4s;
+
+}
+
+.loader-overlay.active{
+
+opacity:1;
+
+visibility:visible;
+
+}
+
+@keyframes spin{
+
+to{
+
+transform:rotate(360deg);
+
+}
+
+}
+
+/* mobile */
+
+@media(max-width:768px){
+
+.header-section h1{
+font-size:3rem;
+}
+
+}
+
+.footer-section h5{
+
+font-family:'Playfair Display',serif;
+
+color:var(--green);
+}
+
+.upload-box{
+
+padding:15px;
+
+border-radius:25px;
+
+background:#fcfbf8;
+
+border:1px solid #ece7de;
+
+height:100%;
+}
+
+.upload-box i{
+
+color:#356f43;
+}
+
+.range-value{
+
+position:absolute;
+
+top:-35px;
+
+font-size:.85rem;
+
+font-weight:600;
+
+color:#356f43;
+}
+
+#resultSection{
+
+margin-top:80px;
+
+}
+
+.footer-link{
+
+display:block;
+
+color:var(--muted);
+
+text-decoration:none;
+
+margin-bottom:10px;
+
+transition:.3s;
+}
+
+.footer-link:hover{
+
+color:var(--green);
+
+transform:translateX(5px);
+
+}
+.social-icon{
+
+width:42px;
+height:42px;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+justify-content:center;
+
+background:white;
+
+margin-right:10px;
+
+color:#356f43;
+
+text-decoration:none;
+
+transition:.3s;
+
+box-shadow:0 5px 15px rgba(0,0,0,.05);
+
+}
+
+.social-icon:hover{
+
+transform:translateY(-5px);
+
+}
+
+.example-image{
+
+width:220px;
+
+height:220px;
+
+object-fit:cover;
+
+border-radius:22px;
+
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+transition:.4s;
+
+}
+
+.example-image:hover{
+
+transform:
+translateY(-8px)
+scale(1.02);
+
+}
+
+.example-role{
+
+font-weight:600;
+
+color:#356f43;
+
+margin-bottom:10px;
+}
+
+.example-arrow{
+
+font-size:2rem;
+
+font-weight:700;
+
+color:#356f43;
+}
+
+/* mobile */
+
+@media(max-width:768px){
+
+.header-section h1{
+
+font-size:3rem;
+}
+
+.preview-image{
+
+height:220px;
+}
+
+.card{
+
+border-radius:25px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- Soft Background Elements -->
+<div class="floating-blob"></div>
+<div class="floating-blob"></div>
+<div class="floating-blob"></div>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#"><i class="fas fa-brain me-2"></i>NeuralCanvas</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Gallery</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Features</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+            </ul>
+            <a href="#uploadForm"
+class="btn btn-primary ms-3 px-4">
+
+Create Art
+
+</a>
+        </div>
+    </div>
+</nav>
+
+<section class="header-section">
+
+<div class="container">
+
+<div class="row align-items-center">
+
+<div class="col-lg-6">
+
+<span class="badge rounded-pill px-4 py-2 mb-4"
+style="
+background:#e7efe4;
+color:#356f43;
+font-weight:600;
+">
+
+Powered by AdaIN Neural Networks
+
+</span>
+
+
+<h1>
+
+Transform Reality
+<br>
+
+Into Art
+
+</h1>
+
+<p class="lead">
+
+NeuralCanvas blends your photos with artistic styles using
+advanced AdaIN neural networks.
+
+Create paintings, sketches, abstract art and unique visuals
+in seconds.
+
+</p>
+
+<div class="mt-4 d-flex gap-3">
+
+<a href="#uploadForm"
+class="btn btn-primary">
+
+Create Artwork
+
+</a>
+
+<a href="#examples"
+
+class="btn btn-light rounded-pill px-4">
+
+View Examples
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="col-lg-6 text-center">
+
+<img 
+src="{{ url_for(
+'send_content_example',
+filename='stylized_Luffy.jpg'
+) }}"
+class="img-fluid hero-image"
+
+style="
+border-radius:35px;
+box-shadow:0 30px 60px rgba(0,0,0,.1);
+max-height:500px;
+object-fit:cover;
+">
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<div class="container mb-5">
+
+<form method="post"
+enctype="multipart/form-data"
+id="uploadForm">
+
+{{ form.hidden_tag() }}
+
+<div class="card p-5">
+
+<div class="text-center mb-5">
+
+<h2 style="
+font-family:'Playfair Display',serif;
+font-size:2.5rem;
+color:#356f43;
+">
+
+AI Style Studio
+
+</h2>
+
+<p class="text-secondary">
+
+Upload content and style images.
+NeuralCanvas creates artistic transformations instantly.
+
+</p>
+
+</div>
+
+<div class="row g-4">
+
+
+<div class="col-lg-4">
+
+<div class="upload-box">
+
+<div
+class="preview-image"
+id="contentPreview">
+
+{% if content_image %}
+
+<img src="{{ url_for('send_image', filename=content_image) }}">
+
+{% else %}
+
+<div>
+
+<i class="fas fa-image fa-2x mb-3"></i>
+
+<h5>Content</h5>
+
+<p class="small">
+
+Upload your original image
+
+</p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+{{ form.content(
+class="form-control mt-3",
+onchange="previewFile(this,'contentPreview')"
+) }}
+
+</div>
+
+</div>
+
+
+
+<div class="col-lg-4">
+
+<div class="upload-box">
+
+<div
+class="preview-image"
+id="stylePreview">
+
+{% if style_image %}
+
+<img src="{{ url_for('send_image', filename=style_image) }}">
+
+{% else %}
+
+<div>
+
+<i class="fas fa-palette fa-2x mb-3"></i>
+
+<h5>Style</h5>
+
+<p class="small">
+
+Upload artistic style
+
+</p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+{{ form.style(
+class="form-control mt-3",
+onchange="previewFile(this,'stylePreview')"
+) }}
+
+</div>
+
+</div>
+
+
+
+<div class="col-lg-4">
+
+<div class="upload-box">
+
+<div class="preview-image">
+
+{% if result_image %}
+
+<img src="{{ url_for(
+'send_image',
+filename=result_image) }}">
+
+{% else %}
+
+<div>
+
+<i class="fas fa-wand-magic-sparkles fa-2x mb-3"></i>
+
+<h5>Result</h5>
+
+<p class="small">
+
+Generated artwork appears here
+
+</p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="range-wrap">
+
+<label class="mb-3">
+
+Style Strength
+
+</label>
+
+<div class="position-relative">
+
+<div
+id="rangeValue"
+class="range-value">
+
+1.0
+
+</div>
+
+{{ form.alpha(
+id="alphaRange",
+type="range",
+min="0",
+max="1",
+step="0.1"
+)}}
+
+</div>
+
+</div>
+
+
+<div class="text-center mt-5">
+
+{{ form.submit(
+class="btn btn-primary"
+)}}
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+    {% if result_image %}
+    <div class="row justify-content-center mt-5" id="resultSection">
+        <div class="col-md-8">
+            <div class="card">
+
+<div class="text-center mb-4">
+
+<h3 style="
+font-family:'Playfair Display',serif;
+color:#356f43;
+">
+
+Your Artwork
+
+</h3>
+
+</div>
+
+<div class="card-body p-0">
+
+<img
+src="{{ url_for('send_image',
+filename=result_image) }}"
+
+class="img-fluid w-100"
+
+style="
+border-radius:25px;
+">
+
+</div>
+
+<div class="text-center mt-4">
+
+<a
+href="{{ url_for('send_image',
+filename=result_image) }}"
+
+download
+
+class="btn btn-primary">
+
+Download Artwork
+
+</a>
+
+</div>
+
+</div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if error %}
+        <div class="alert alert-danger mt-4 text-center" role="alert" style="background: rgba(220, 38, 38, 0.2); border-color: #dc2626; color: #fecaca;">
+            <strong>Error:</strong> {{ error }}
+        </div>
+    {% endif %}
+</div>
+
+<section
+id="examples"
+class="container examples-section">
+
+<div class="card">
+
+<div class="card-header text-center py-3">
+Examples
+</div>
+
+<div class="card-body">
+
+<p class="text-center text-muted mb-5">
+See how NeuralCanvas transforms content images using artistic styles.
+</p>
+
+<div class="row g-5">
+
+
+<!-- Example 1 -->
+
+<div class="col-12">
+
+<div class="example-flow d-flex align-items-center justify-content-center flex-wrap gap-4">
+
+<div>
+
+<div class="example-role text-center mb-2">
+Content Image
+</div>
+
+<img src="{{ url_for(
+'send_content_example',
+filename='Neymarjr.jpg'
+) }}"
+alt="Neymar Content"
+class="example-image">
+
+</div>
+
+
+<div>
+
+<div class="example-role text-center mb-2">
+Style Image
+</div>
+
+<img src="{{ url_for(
+'send_style_example',
+filename='arty.jpg'
+) }}"
+alt="Artistic Style"
+class="example-image">
+
+</div>
+
+
+<div class="example-arrow fs-1">
+→
+</div>
+
+
+<div>
+
+<div class="example-role text-center mb-2">
+Output
+</div>
+
+<img 
+src="{{ url_for(
+'send_content_example',
+filename='stylized_Neymarjr.jpg'
+) }}"
+alt="Neymar Result"
+class="example-image">
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- Example 2 -->
+
+<div class="col-12">
+
+<div class="example-flow d-flex align-items-center justify-content-center flex-wrap gap-4">
+
+<div>
+
+<div class="example-role text-center mb-2">
+Content Image
+</div>
+
+<img src="{{ url_for(
+'send_content_example',
+filename='Luffy.jpg'
+) }}"
+alt="Luffy"
+class="example-image">
+
+</div>
+
+
+<div>
+
+<div class="example-role text-center mb-2">
+Style Image
+</div>
+
+<img src="{{ url_for(
+'send_style_example',
+filename='skyandme.jpg'
+) }}"
+alt="city"
+class="example-image">
+
+</div>
+
+
+<div class="example-arrow fs-1">
+→
+</div>
+
+
+<div>
+
+<div class="example-role text-center mb-2">
+Output
+</div>
+
+<img 
+src="{{ url_for(
+'send_content_example',
+filename='stylized_Luffy.jpg'
+) }}"
+alt="Luffy Result"
+class="example-image">
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- Example 3 -->
+
+<div class="col-12">
+
+<div class="example-flow d-flex align-items-center justify-content-center flex-wrap gap-4">
+
+<div>
+
+<div class="example-role text-center mb-2">
+Content Image
+</div>
+
+<img src="{{ url_for(
+'send_content_example',
+filename='Billie Eilish.jpg'
+) }}"
+alt="Billie Eilish"
+class="example-image">
+
+</div>
+
+
+<div>
+
+<div class="example-role text-center mb-2">
+Style Image
+</div>
+
+<img src="{{ url_for(
+'send_style_example',
+filename='oldme.jpg'
+) }}"
+alt="grany"
+class="example-image">
+ 
+</div>
+
+
+<div class="example-arrow fs-1">
+→
+</div>
+
+
+<div>
+
+<div class="example-role text-center mb-2">
+Output
+</div>
+
+<img 
+src="{{ url_for(
+'send_content_example',
+filename='stylized_Billie_Eilish.jpg'
+) }}"
+alt="Generated"
+class="example-image">
+
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="container faq-section fade-in-up">
+    <div class="card">
+        <div class="card-header text-center py-3">FAQs</div>
+        <div class="card-body">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqOne" aria-expanded="false" aria-controls="faqOne">
+                            How does NeuralCanvas work?
+                        </button>
+                    </h2>
+                    <div id="faqOne" class="accordion-collapse collapse" aria-labelledby="faqHeadingOne" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            NeuralCanvas uses AdaIN (Adaptive Instance Normalization) neural networks to blend the structure of your content image with the artistic style of another image.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwo" aria-expanded="false" aria-controls="faqTwo">
+                             Can I use any artistic style?
+                        </button>
+                    </h2>
+                    <div id="faqTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes. You can use sketches, watercolor paintings, cubism, anime art, abstract paintings, oil paintings and many other artistic styles.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqThree" aria-expanded="false" aria-controls="faqThree">
+                             What types of artwork work best?
+                        </button>
+                    </h2>
+                    <div id="faqThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Portraits, landscapes, sketches, anime art, oil paintings and high-contrast images usually produce the best stylized results.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqFour" aria-expanded="false" aria-controls="faqFour">
+                             What powers NeuralCanvas?
+                        </button>
+                    </h2>
+                    <div id="faqFour" class="accordion-collapse collapse" aria-labelledby="faqHeadingFour" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            NeuralCanvas is built with Python, PyTorch, Flask and AdaIN-based neural style transfer architecture.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingFive">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqFive" aria-expanded="false" aria-controls="faqFive">
+                             Which dataset / how big data?
+                        </button>
+                    </h2>
+                    <div id="faqFive" class="accordion-collapse collapse" aria-labelledby="faqHeadingFive" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            The model is trained on large-scale image datasets.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <h5><i class="fas fa-brain me-2"></i>NeuralCanvas</h5>
+                <p class="mb-4">"Every artist dips his brush in his own soul, and paints his own nature into his pictures."</p>
+                <p class="small text-muted">Empowering creators with state-of-the-art AI tools to reimagine reality through the lens of artistic expression.</p>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h5>Quick Links</h5>
+                <a href="#home" class="footer-link">Home</a>
+                <a href="#uploadForm" class="footer-link">About Us</a>
+                <a href="#examples" class="footer-link">Showcase</a>
+                <a href="#faqAccordion" class="footer-link">FAQs</a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5>Contact Us</h5>
+                <p class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> Major Project • AI & Machine Learning, Tech City</p>
+                <p class="mb-2"><i class="fas fa-envelope me-2"></i> akashmehra.aidev@gmail.com</p>
+                <p class="mb-2"><i class="fas fa-phone me-2"></i> +91 00000 00000</p>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5>Follow Us</h5>
+                <div class="d-flex mb-3">
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="https://github.com/itsakki10" class="social-icon"><i class="fab fa-github"></i></a>
+                </div>
+                <p class="small text-muted">Subscribe to our newsletter for the latest updates.</p>
+            </div>
+        </div>
+        <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
+        <div class="text-center text-muted small">
+            &copy; 2026 NeuralCanvas • Built by Akash Mehra |All rights reserved | Privacy Policy | Terms of Service
+        </div>
+    </div>
+</footer>
+
+<!-- Loading Overlay -->
+<div class="loader-overlay" id="loader">
+    <div class="soft-loader mb-4"></div>
+    <h3 style="
+font-family:'Playfair Display',serif;
+color:#356f43;
+">
+
+Creating Artwork
+
+</h3>
+
+<p class="text-secondary">
+
+NeuralCanvas is transforming your image...
+
+</p>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+/* -------------------------
+IMAGE PREVIEW
+------------------------- */
+
+window.previewFile = function(input, previewId){
+
+const preview=document.getElementById(previewId);
+
+const file=input.files[0];
+
+if(!file) return;
+
+const reader=new FileReader();
+
+reader.onload=function(e){
+
+preview.innerHTML=`
+<img src="${e.target.result}" 
+alt="preview">
+`;
+
+};
+
+reader.readAsDataURL(file);
+
+};
+
+
+
+/* -------------------------
+RESULT AUTO SCROLL
+------------------------- */
+
+const result=document.getElementById(
+'resultSection'
+);
+
+if(result){
+
+result.scrollIntoView({
+
+behavior:'smooth',
+block:'center'
+
+});
+
+}
+
+
+
+/* -------------------------
+LOADER
+------------------------- */
+
+const form=document.getElementById(
+'uploadForm'
+);
+
+const loader=document.getElementById(
+'loader'
+);
+
+if(form){
+
+form.addEventListener(
+'submit',
+()=>{
+
+if(loader){
+
+loader.classList.add(
+'active'
+);
+
+}
+
+});
+
+}
+
+
+
+/* -------------------------
+SOFT FLOATING BLOBS
+(clean replacement of neural particles)
+------------------------- */
+
+const blobs=document.querySelectorAll(
+'.floating-blob'
+);
+
+document.addEventListener(
+'mousemove',
+(e)=>{
+
+const x=e.clientX/window.innerWidth;
+
+const y=e.clientY/window.innerHeight;
+
+blobs.forEach((blob,index)=>{
+
+const speed=(index+1)*15;
+
+blob.style.transform=
+`translate(
+${x*speed}px,
+${y*speed}px
+)`;
+
+});
+
+});
+
+
+
+/* -------------------------
+SLIDER
+------------------------- */
+
+const slider=
+document.getElementById(
+'alphaRange'
+);
+
+const bubble=
+document.getElementById(
+'rangeValue'
+);
+
+if(slider && bubble){
+
+function updateSlider(){
+
+const val=slider.value;
+
+bubble.innerText=val;
+
+const min=slider.min||0;
+
+const max=slider.max||1;
+
+const percent=
+((val-min)*100)/(max-min);
+
+bubble.style.left=
+`calc(${percent}% - 10px)`;
+
+
+slider.style.background=
+`linear-gradient(
+90deg,
+#356f43 ${percent}%,
+#dce6dc ${percent}% )`;
+
+}
+
+slider.addEventListener(
+'input',
+updateSlider
+);
+
+updateSlider();
+
+}
+
+
+
+/* -------------------------
+NAVBAR SCROLL EFFECT
+------------------------- */
+
+const nav=
+document.querySelector(
+'.navbar'
+);
+
+window.addEventListener(
+'scroll',
+()=>{
+
+if(window.scrollY>50){
+
+nav.style.background=
+'rgba(255,253,248,.95)';
+
+nav.style.boxShadow=
+'0 5px 25px rgba(0,0,0,.06)';
+
+}
+else{
+
+nav.style.background=
+'rgba(255,253,248,.65)';
+
+nav.style.boxShadow=
+'none';
+
+}
+
+});
+
+
+window.addEventListener(
+'load',
+()=>{
+
+loader.classList.remove(
+'active'
+);
+
+});
+
+});
+
+</script>
+</body>
+</html>
+ 
