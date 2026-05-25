@@ -607,7 +607,111 @@ border-radius:25px;
 }
 
 }
+.hero-mini-text{
 
+margin-top:20px;
+
+font-size:1rem;
+
+color:#6b7280;
+
+line-height:1.8;
+
+}
+
+.hero-stats{
+
+display:flex;
+
+gap:50px;
+
+margin-top:45px;
+
+flex-wrap:wrap;
+
+}
+
+.hero-stats h3{
+
+color:#356f43;
+
+font-weight:700;
+
+margin-bottom:0;
+
+font-size:2rem;
+
+}
+
+.hero-stats span{
+
+color:#6b7280;
+
+font-size:.9rem;
+
+}
+
+.hero-image{
+
+animation:floatImage 4s ease-in-out infinite;
+
+}
+
+@keyframes floatImage{
+
+0%{
+
+transform:translateY(0px);
+
+}
+
+50%{
+
+transform:translateY(-12px);
+
+}
+
+100%{
+
+transform:translateY(0px);
+
+}
+
+}
+
+.fade-up{
+
+opacity:0;
+
+transform:translateY(40px);
+
+transition:all .8s ease;
+
+}
+
+.fade-up.show{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+.btn-primary{
+
+box-shadow:
+0 0 30px rgba(53,111,67,.3),
+0 10px 30px rgba(53,111,67,.2);
+
+}
+
+.btn-primary:hover{
+
+transform:
+translateY(-5px)
+scale(1.04);
+
+}
 </style>
 </head>
 <body>
@@ -625,11 +729,10 @@ border-radius:25px;
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#examples">Gallery</a></li>
-                <li class="nav-item"><a class="nav-link" href="#faqAccordion">Features</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
-                <li class="nav-item"><a class="nav-link" href="#footer">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="#uploadForm">Create</a></li>
+<li class="nav-item"><a class="nav-link" href="#examples">Gallery</a></li>
+<li class="nav-item"><a class="nav-link" href="#FAQs">FAQs</a></li>
+<li class="nav-item"><a class="nav-link" href="#footer">Contact</a></li>
             </ul>
             <a href="#uploadForm"
 class="btn btn-primary ms-3 px-4">
@@ -661,7 +764,7 @@ Powered by AdaIN Neural Networks
 </span>
 
 
-<h1>
+<h1 id="heroText">
 
 Transform Reality
 <br>
@@ -669,6 +772,12 @@ Transform Reality
 Into Art
 
 </h1>
+
+<p class="hero-mini-text">
+
+Turn ordinary images into paintings, anime, sketches and AI-generated masterpieces.
+
+</p>
 
 <p class="lead">
 
@@ -696,6 +805,25 @@ class="btn btn-light rounded-pill px-4">
 View Examples
 
 </a>
+
+</div>
+
+<div class="hero-stats">
+
+<div>
+<h3>50K+</h3>
+<span>Images Generated</span>
+</div>
+
+<div>
+<h3>30+</h3>
+<span>Art Styles</span>
+</div>
+
+<div>
+<h3>AdaIN</h3>
+<span>AI Engine</span>
+</div>
 
 </div>
 
@@ -1557,8 +1685,60 @@ loader.classList.remove(
 
 });
 
+const words=[
+"Into Art",
+"Into Anime",
+"Into Paintings",
+"Into Dreams"
+];
+
+let i=0;
+
+setInterval(()=>{
+
+const hero=
+document.getElementById(
+'heroText'
+);
+
+if(hero){
+
+hero.innerHTML=
+`Transform Reality<br>${words[i]}`;
+
+i=(i+1)%words.length;
+
+}
+
+},2500);
+
+});
+const observer=
+new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.classList.add(
+'show'
+);
+
+}
+
 });
 
+});
+
+document.querySelectorAll(
+'.card,.faq-section,.examples-section'
+).forEach(el=>{
+
+el.classList.add('fade-up');
+
+observer.observe(el);
+
+});
 </script>
 </body>
 </html>
