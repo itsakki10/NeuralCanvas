@@ -59,7 +59,7 @@ def style_transfer(content_image, style_image,
                    alpha, device):
 
     transform = transforms.Compose([
-        transforms.Resize((96, 96)),
+        transforms.Resize((192, 192)),
         transforms.ToTensor()
     ])
 
@@ -111,9 +111,16 @@ def style_transfer(content_image, style_image,
 def save_image(image, path):
     image = image.cpu().clone()
     image = image.squeeze(0)
-    image = image.clamp(0, 1)
+    image = image.clamp(0,1)
+
     image = transforms.ToPILImage()(image)
-    image.save(path)
+
+    image = image.resize((512,512))
+
+    image.save(
+        path,
+        quality=95
+    )
 
 
 
