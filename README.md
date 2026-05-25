@@ -8,9 +8,7 @@ NeuralCanvas is an AI-powered artistic style transfer platform that uses Adaptiv
 
 ## 🚀 Live Demo
 
-Coming Soon
-
-> Demo will be added after deployment on Render.
+https://neuralcanvas-cpk1.onrender.com
 
 ---
 
