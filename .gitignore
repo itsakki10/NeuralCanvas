@@ -10,8 +10,7 @@ optimizer_*.pth
 decoder_[0-9]*.pth
 
 AdaIN/
-content_data/
-style_data/
+
 
 experiment/*
 !experiment/big_dataset/
