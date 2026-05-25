@@ -195,8 +195,11 @@ def index():
 
                     result_image = result_filename
 
+                
                 except Exception as e:
-                    error = str(e)
+                    import traceback
+                    error = traceback.format_exc()
+                    print(error)
 
             else:
                 error = "Upload both images"
