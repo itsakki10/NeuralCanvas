@@ -59,7 +59,7 @@ def style_transfer(content_image, style_image,
                    alpha, device):
 
     transform = transforms.Compose([
-        transforms.Resize((192, 192)),
+        transforms.Resize((224, 224)),
         transforms.ToTensor()
     ])
 
@@ -108,6 +108,8 @@ def style_transfer(content_image, style_image,
     return stylized_image
 
 
+from PIL import ImageEnhance
+
 def save_image(image, path):
     image = image.cpu().clone()
     image = image.squeeze(0)
@@ -115,12 +117,19 @@ def save_image(image, path):
 
     image = transforms.ToPILImage()(image)
 
-    image = image.resize((512,512))
+    image = image.resize((768,768))
 
-    image.save(
-        path,
-        quality=95
-    )
+    enhancer = ImageEnhance.Sharpness(image)
+    image = enhancer.enhance(1.8)
+
+    color = ImageEnhance.Color(image)
+    image = color.enhance(1.15)
+
+    contrast = ImageEnhance.Contrast(image)
+    image = contrast.enhance(1.1)
+
+    image.save(path, quality=100)
+    
 
 
 
@@ -198,7 +207,10 @@ def index():
                         style_path
                     ).convert('RGB')
 
-                    alpha = float(form.alpha.data)
+                    alpha = min(
+                        float(form.alpha.data),
+                        0.75
+                   )
 
                     stylized_image = style_transfer(
                         content_image,
@@ -207,7 +219,7 @@ def index():
                         decoder,
                         alpha,
                         device
-                    )
+             )
                     import gc
 
                     del content_image
