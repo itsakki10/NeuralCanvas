@@ -9,6 +9,8 @@ from wtforms.validators import InputRequired
 from PIL import Image
 from torchvision import transforms
 import io
+import gc
+torch.set_num_threads(1)
 
 # Import your existing AdaIN code
 from utils.models import VGGEncoder, Decoder
@@ -52,28 +54,56 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-def style_transfer(content_image, style_image, encoder, decoder, alpha, device):
-    content_transform = transforms.Compose([
-        transforms.Resize((256,256)),
+def style_transfer(content_image, style_image,
+                   encoder, decoder,
+                   alpha, device):
+
+    transform = transforms.Compose([
+        transforms.Resize((96, 96)),
         transforms.ToTensor()
     ])
 
-    style_transform = transforms.Compose([
-        transforms.Resize((256,256)),
-        transforms.ToTensor()
-    ])
-    content_image = content_transform(content_image).unsqueeze(0).to(device)
-    style_image = style_transform(style_image).unsqueeze(0).to(device)
+    content_image = transform(
+        content_image
+    ).unsqueeze(0).to(device)
+
+    style_image = transform(
+        style_image
+    ).unsqueeze(0).to(device)
 
     with torch.no_grad():
-        content_feats = encoder(content_image, is_test=True)
-        style_feats = encoder(style_image, is_test=True)
 
-        stylized_feats = adaptive_instance_normalization(content_feats, style_feats)
+        content_feats = encoder(
+            content_image,
+            is_test=True
+        )
 
-        stylized_feats = alpha * stylized_feats + (1 - alpha) * content_feats
+        style_feats = encoder(
+            style_image,
+            is_test=True
+        )
 
-        stylized_image = decoder(stylized_feats)
+        stylized_feats = adaptive_instance_normalization(
+            content_feats,
+            style_feats
+        )
+
+        stylized_feats = (
+            alpha*stylized_feats
+            +(1-alpha)*content_feats
+        )
+
+        stylized_image = decoder(
+            stylized_feats
+        )
+
+    del content_feats
+    del style_feats
+    del stylized_feats
+    del content_image
+    del style_image
+
+    gc.collect()
 
     return stylized_image
 
@@ -175,7 +205,6 @@ def index():
 
                     del content_image
                     del style_image
-                    torch.cuda.empty_cache()
                     gc.collect()
 
                     result_filename = (
@@ -192,6 +221,9 @@ def index():
                         stylized_image,
                         result_path
                     )
+
+                    del stylized_image
+                    gc.collect()
 
                     result_image = result_filename
 

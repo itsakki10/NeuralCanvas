@@ -712,6 +712,179 @@ translateY(-5px)
 scale(1.04);
 
 }
+
+/* ===== GLOBAL SECTION SPACING ===== */
+
+section{
+margin-top:120px;
+margin-bottom:120px;
+}
+
+.container{
+padding-left:24px;
+padding-right:24px;
+}
+
+/* ===== HERO ===== */
+
+.header-section{
+padding-top:180px;
+padding-bottom:140px;
+min-height:100vh;
+display:flex;
+align-items:center;
+}
+
+.hero-stats{
+
+margin-top:60px;
+
+gap:70px;
+
+justify-content:flex-start;
+
+}
+
+.hero-stats div{
+
+min-width:120px;
+
+}
+
+/* ===== UPLOAD STUDIO ===== */
+
+#uploadForm{
+
+margin-top:40px;
+
+}
+
+.upload-box{
+
+padding:25px;
+
+min-height:420px;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:space-between;
+
+}
+
+.preview-image{
+
+height:300px;
+
+margin-bottom:20px;
+
+}
+
+/* ===== RESULT ===== */
+
+#resultSection{
+
+margin-top:120px;
+
+margin-bottom:100px;
+
+}
+
+/* ===== EXAMPLES ===== */
+
+.examples-section{
+
+margin-top:150px;
+
+}
+
+.example-flow{
+
+padding:35px;
+
+border-radius:30px;
+
+background:#fafaf7;
+
+margin-bottom:50px;
+
+}
+
+.example-image{
+
+width:230px;
+
+height:230px;
+
+}
+
+/* ===== FAQ ===== */
+
+.faq-section{
+
+margin-top:140px;
+
+}
+
+.accordion-item{
+
+margin-bottom:20px;
+
+}
+
+/* ===== FOOTER ===== */
+
+.footer-section{
+
+margin-top:140px;
+
+padding:90px 0;
+
+}
+
+/* ===== MOBILE ===== */
+
+@media(max-width:768px){
+
+section{
+
+margin-top:70px;
+margin-bottom:70px;
+
+}
+
+.hero-stats{
+
+gap:30px;
+
+justify-content:center;
+
+text-align:center;
+
+}
+
+.header-section{
+
+padding-top:130px;
+
+min-height:auto;
+
+}
+
+.example-flow{
+
+padding:20px;
+
+}
+
+.upload-box{
+
+min-height:auto;
+
+}
+
+}
 </style>
 </head>
 <body>
@@ -1469,29 +1642,37 @@ NeuralCanvas is transforming your image...
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
 
 document.addEventListener("DOMContentLoaded",()=>{
 
-/* -------------------------
+/* =========================
 IMAGE PREVIEW
-------------------------- */
+========================= */
 
-window.previewFile = function(input, previewId){
+window.previewFile=function(input,previewId){
 
-const preview=document.getElementById(previewId);
+const preview=
+document.getElementById(previewId);
 
 const file=input.files[0];
 
 if(!file) return;
 
-const reader=new FileReader();
+const reader=
+new FileReader();
 
-reader.onload=function(e){
+reader.onload=(e)=>{
 
 preview.innerHTML=`
-<img src="${e.target.result}" 
-alt="preview">
+<img src="${e.target.result}"
+style="
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:25px;
+">
 `;
 
 };
@@ -1502,15 +1683,18 @@ reader.readAsDataURL(file);
 
 
 
-/* -------------------------
-RESULT AUTO SCROLL
-------------------------- */
+/* =========================
+AUTO SCROLL TO RESULT
+========================= */
 
-const result=document.getElementById(
+const result=
+document.getElementById(
 'resultSection'
 );
 
 if(result){
+
+setTimeout(()=>{
 
 result.scrollIntoView({
 
@@ -1519,19 +1703,23 @@ block:'center'
 
 });
 
+},300);
+
 }
 
 
 
-/* -------------------------
+/* =========================
 LOADER
-------------------------- */
+========================= */
 
-const form=document.getElementById(
+const form=
+document.getElementById(
 'uploadForm'
 );
 
-const loader=document.getElementById(
+const loader=
+document.getElementById(
 'loader'
 );
 
@@ -1553,14 +1741,28 @@ loader.classList.add(
 
 }
 
+window.addEventListener(
+'load',
+()=>{
+
+if(loader){
+
+loader.classList.remove(
+'active'
+);
+
+}
+
+});
 
 
-/* -------------------------
-SOFT FLOATING BLOBS
-(clean replacement of neural particles)
-------------------------- */
 
-const blobs=document.querySelectorAll(
+/* =========================
+FLOATING BACKGROUND BLOBS
+========================= */
+
+const blobs=
+document.querySelectorAll(
 '.floating-blob'
 );
 
@@ -1568,13 +1770,16 @@ document.addEventListener(
 'mousemove',
 (e)=>{
 
-const x=e.clientX/window.innerWidth;
+const x=
+e.clientX/window.innerWidth;
 
-const y=e.clientY/window.innerHeight;
+const y=
+e.clientY/window.innerHeight;
 
 blobs.forEach((blob,index)=>{
 
-const speed=(index+1)*15;
+const speed=
+(index+1)*15;
 
 blob.style.transform=
 `translate(
@@ -1588,9 +1793,9 @@ ${y*speed}px
 
 
 
-/* -------------------------
+/* =========================
 SLIDER
-------------------------- */
+========================= */
 
 const slider=
 document.getElementById(
@@ -1606,13 +1811,17 @@ if(slider && bubble){
 
 function updateSlider(){
 
-const val=slider.value;
+const val=
+slider.value;
 
-bubble.innerText=val;
+bubble.innerText=
+val;
 
-const min=slider.min||0;
+const min=
+slider.min||0;
 
-const max=slider.max||1;
+const max=
+slider.max||1;
 
 const percent=
 ((val-min)*100)/(max-min);
@@ -1640,9 +1849,9 @@ updateSlider();
 
 
 
-/* -------------------------
-NAVBAR SCROLL EFFECT
-------------------------- */
+/* =========================
+NAVBAR EFFECT
+========================= */
 
 const nav=
 document.querySelector(
@@ -1659,7 +1868,7 @@ nav.style.background=
 'rgba(255,253,248,.95)';
 
 nav.style.boxShadow=
-'0 5px 25px rgba(0,0,0,.06)';
+'0 5px 30px rgba(0,0,0,.06)';
 
 }
 else{
@@ -1675,21 +1884,19 @@ nav.style.boxShadow=
 });
 
 
-window.addEventListener(
-'load',
-()=>{
 
-loader.classList.remove(
-'active'
-);
-
-});
+/* =========================
+HERO TEXT ANIMATION
+========================= */
 
 const words=[
+
 "Into Art",
 "Into Anime",
 "Into Paintings",
-"Into Dreams"
+"Into Dreams",
+"Into Masterpieces"
+
 ];
 
 let i=0;
@@ -1706,19 +1913,31 @@ if(hero){
 hero.innerHTML=
 `Transform Reality<br>${words[i]}`;
 
-i=(i+1)%words.length;
+i=
+(i+1)%words.length;
 
 }
 
 },2500);
 
-});
+
+
+/* =========================
+SCROLL ANIMATION
+========================= */
+
 const observer=
-new IntersectionObserver(entries=>{
+new IntersectionObserver(
 
-entries.forEach(entry=>{
+(entries)=>{
 
-if(entry.isIntersecting){
+entries.forEach(
+
+(entry)=>{
+
+if(
+entry.isIntersecting
+){
 
 entry.target.classList.add(
 'show'
@@ -1726,19 +1945,37 @@ entry.target.classList.add(
 
 }
 
-});
+}
 
-});
+);
+
+},
+
+{
+
+threshold:.15
+
+}
+
+);
 
 document.querySelectorAll(
-'.card,.faq-section,.examples-section'
-).forEach(el=>{
+'.card,.faq-section,.examples-section,.upload-box'
+)
+.forEach(el=>{
 
-el.classList.add('fade-up');
+el.classList.add(
+'fade-up'
+);
 
-observer.observe(el);
+observer.observe(
+el
+);
 
 });
+
+});
+
 </script>
 </body>
 </html>
