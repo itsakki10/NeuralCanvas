@@ -1,40 +1,51 @@
 # 🧠 NeuralCanvas
 
-Transform Reality Into Art with AI
+### Transform Reality Into Art with AI
 
-NeuralCanvas is an AI-powered artistic style transfer platform that uses Adaptive Instance Normalization (AdaIN) to blend the content of one image with the artistic style of another. Upload a content image, choose a style reference, and generate unique AI artwork in seconds.
+NeuralCanvas is a Dockerized AI-powered artistic style transfer platform built using **Adaptive Instance Normalization (AdaIN)** and **PyTorch**. The application allows users to blend the content of one image with the artistic style of another, generating unique AI artwork in seconds through an intuitive web interface.
 
 ---
 
 ## 🚀 Live Demo
 
+**Web Application:**
 https://neuralcanvas-cpk1.onrender.com
 
----
-
-## ✨ Features
-
-✓ AI-powered neural style transfer  
-✓ Upload content and style images  
-✓ Adjustable style intensity control  
-✓ Instant image preview  
-✓ Download generated artwork  
-✓ Example showcase gallery  
-✓ Clean responsive UI  
-✓ Flask + PyTorch backend
+**GitHub Repository:**
+https://github.com/itsakki10/NeuralCanvas
 
 ---
 
-## 🖼 Workflow
+## ✨ Key Features
+
+- 🎨 AI-powered Neural Style Transfer
+- 🧠 Adaptive Instance Normalization (AdaIN)
+- 📤 Upload custom content and style images
+- 🎚 Adjustable style intensity control
+- ⚡ Real-time image generation
+- 👀 Live image preview
+- 📥 Download generated artwork
+- 🖼 Interactive example gallery
+- 📱 Fully responsive user interface
+- 🐳 Docker container support
+- 🌐 Production-ready deployment with Gunicorn
+
+---
+
+## 🖼 How It Works
 
 ```text
 Content Image
       ↓
 Style Image
       ↓
-AdaIN Neural Network
+AdaIN Encoder
       ↓
-AI Generated Artwork
+Feature Alignment
+      ↓
+Decoder Network
+      ↓
+Stylized Artwork
 ```
 
 ---
@@ -45,7 +56,7 @@ AI Generated Artwork
 
 ![Homepage](assets/home.png)
 
-### Upload Studio
+### Style Transfer Studio
 
 ![Upload Studio](assets/upload.png)
 
@@ -55,12 +66,33 @@ AI Generated Artwork
 
 ---
 
+## 🏗 System Architecture
+
+```text
+User Uploads Images
+          ↓
+      Flask App
+          ↓
+     Image Preprocessing
+          ↓
+      AdaIN Network
+     (PyTorch Model)
+          ↓
+    Style Transfer Engine
+          ↓
+   Generated Artwork
+          ↓
+      Browser Output
+```
+
+---
+
 ## 🛠 Tech Stack
 
 ### Frontend
 
-- HTML
-- CSS
+- HTML5
+- CSS3
 - Bootstrap
 - JavaScript
 
@@ -70,56 +102,63 @@ AI Generated Artwork
 - Flask-WTF
 - Gunicorn
 
-### AI / Machine Learning
+### Artificial Intelligence
 
 - PyTorch
-- AdaIN
+- Adaptive Instance Normalization (AdaIN)
 - VGG Encoder
 - Decoder Network
 
+### DevOps & Deployment
+
+- Docker
+- Render
+
 ---
 
-## 📁 Project Structure
+## 📂 Project Structure
 
 ```text
 NeuralCanvas/
 │
-├── app.py
-├── templates/
-├── static/
+├── AdaIN/
+├── assets/
 ├── content_data/
-├── style_data/
 ├── experiment/
 │   └── big_dataset/
+├── static/
+├── style_data/
+├── templates/
 ├── utils/
+│
+├── app.py
+├── train.py
 ├── requirements.txt
+├── Dockerfile
 ├── Procfile
-└── README.md
+├── runtime.txt
+├── README.md
+└── vgg_normalised.pth
 ```
 
 ---
 
-## ⚙ Installation
+## ⚙ Local Installation
 
-Clone repository:
+### Clone Repository
 
 ```bash
 git clone https://github.com/itsakki10/NeuralCanvas.git
-```
-
-Move into project:
-
-```bash
 cd NeuralCanvas
 ```
 
-Create virtual environment:
+### Create Virtual Environment
 
 ```bash
 python -m venv env
 ```
 
-Activate environment:
+### Activate Environment
 
 Windows:
 
@@ -127,13 +166,19 @@ Windows:
 env\Scripts\activate
 ```
 
-Install dependencies:
+Linux / macOS:
+
+```bash
+source env/bin/activate
+```
+
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run application:
+### Run Application
 
 ```bash
 python app.py
@@ -147,11 +192,46 @@ http://localhost:5000
 
 ---
 
+## 🐳 Docker Deployment
+
+### Build Docker Image
+
+```bash
+docker build -t neuralcanvas .
+```
+
+### Run Docker Container
+
+```bash
+docker run -p 5000:5000 neuralcanvas
+```
+
+Open:
+
+```text
+http://localhost:5000
+```
+
+---
+
+## 📈 Future Enhancements
+
+- Multiple artistic style blending
+- Batch image processing
+- User authentication
+- Artwork history management
+- Cloud storage integration
+- GPU acceleration support
+
+---
+
 ## 👨‍💻 Author
 
-Akash Mehra
+**Akash Mehra**
 
-AI & Machine Learning Major Project
+B.Tech Artificial Intelligence & Machine Learning
+
+### Connect With Me
 
 GitHub: https://github.com/itsakki10
 
